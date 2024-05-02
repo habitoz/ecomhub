@@ -1,0 +1,117 @@
+import { Product } from "@medusajs/medusa"
+import {
+  useAdminDeleteProduct,
+  useAdminProducts,
+  useAdminStore,
+  useAdminUpdateProduct,
+  useAdminCustomers,
+  useAdminOrders,
+} from "medusa-react"
+import { useMemo, useState } from "react"
+import { useSpring, animated } from "react-spring"
+import { useNavigate, NavLink } from "react-router-dom"
+import { useTranslation } from "react-i18next"
+import PageDescription from "../../components/atoms/page-description"
+import WithdrawBalance from "./withdraw"
+import ExportIcon from "../../components/fundamentals/icons/export-icon"
+import Button from "../../components/fundamentals/button"
+import Spacer from "../../components/atoms/spacer"
+import Spinner from "../../components/atoms/spinner"
+
+type TNumber = {
+  n: number
+}
+
+const Number = ({ n }: TNumber)=>{
+
+  const { number } = useSpring({
+    from: { number: 0}, 
+    number: n,
+    delay: 200,
+    config: { mass: 1, tension: 20, friction: 10}
+  })
+
+  return <animated.div >{number.to((n) => n.toFixed(0))}</animated.div>
+}
+
+
+const Overview = () => {
+  const { t } = useTranslation()
+  const { products, count: countProducts,  isLoading } = useAdminProducts()
+  const { customers, count: countCustomers, isLoading: customerLoading } = useAdminCustomers()
+  const { orders, count: countOrders, isLoading: ordersLoading } = useAdminOrders()
+  const [showNewCollection, setShowNewCollection] = useState(false)
+  const navigate = useNavigate()
+  const handleWithdrawBalance  = ()=>{
+
+  }
+
+  return (
+    <>
+      <div className="flex flex-col">
+        <PageDescription
+          title={t("analytics-card", "Analytics")}
+          subtitle={t(
+            "analytics-card-manage",
+            "Manage the Gift Cards of your Medusa store"
+          )}
+        />
+        <div className="medium:grid-cols-2 gap-y-xsmall grid grid-cols-1 gap-x-4">
+            <div className="rounded-rounded cusrsor-pointer bg-grey-0 border-grey-20 p-base  w-full border">
+              <div className=" flex justify-center items-center">
+                <div className="w-full flex flex-col justify-center items-center">
+                  <h1 className="inter-large-semibold mb-xsmall flex">$ <Number n={50000000000}/></h1>
+                  <h2 className="inter-base-regular text-grey-50">Total Balance</h2>
+                </div>
+                <div className="flex space-x-2">
+                  <Button
+                    variant="secondary"
+                    size="small"
+                    onClick={() => setShowNewCollection(!showNewCollection)}
+                  >
+                    <ExportIcon size={20} />
+                    {t("withdraw-new", "Withdraw")}
+                  </Button>
+                </div>
+              </div>
+            </div>
+            <div  className="rounded-rounded cusrsor-pointer bg-grey-0 border-grey-20 p-base  w-full border">
+              <div className=" flex justify-center items-center">
+                <div className="w-full flex flex-col justify-center items-center" onClick={ () => navigate("/a/orders")}>
+                  <h1 className="inter-large-semibold mb-xsmall">{ countOrders?<Number n={countOrders}/> :<Number n={25000}/>}</h1>
+                  <h2 className="inter-base-regular text-grey-50">Total Orders</h2>
+                </div>
+              </div>
+            </div>
+            <div  className="rounded-rounded cusrsor-pointer bg-grey-0 border-grey-20 p-base  w-full border">
+              <div className=" flex justify-center items-center">
+                <div className="w-full flex flex-col justify-center items-center" onClick = { () => navigate("/a/products")}>
+                  <h1 className="inter-large-semibold mb-xsmall">{ countProducts? <Number n={countProducts}/>: <Number n={200000}/> }</h1>
+                  <h2 className="inter-base-regular text-grey-50">Total Products</h2>
+                </div>
+                
+              </div>
+            </div>
+            <div   className="rounded-rounded cusrsor-pointer bg-grey-0 border-grey-20 p-base  w-full border">
+              <div className=" flex justify-center items-center">
+                <div className="w-full flex flex-col justify-center items-center" onClick={ () => navigate("/a/customers")}>
+                  <h1 className="inter-large-semibold mb-xsmall">{ countCustomers? <Number n={countCustomers}/> : <Number n={100000}/> }</h1>
+                  <h2 className="inter-base-regular text-grey-50">Total Customers</h2>
+                </div>
+              </div>
+            </div>
+            
+        </div>
+
+        {showNewCollection && (
+        <WithdrawBalance
+          onClose={() => setShowNewCollection(!showNewCollection)}
+        />
+      )}
+      </div>
+      <Spacer />
+    </>
+  )
+}
+
+export default Overview
