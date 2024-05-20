@@ -7,12 +7,16 @@ import { getErrorMessage } from "../../../utils/error-messages"
 import Avatar from "../../atoms/avatar"
 import Button from "../../fundamentals/button"
 import GearIcon from "../../fundamentals/icons/gear-icon"
+import LockIcon from "../../fundamentals/icons/lock-icon"
 import SignOutIcon from "../../fundamentals/icons/log-out-icon"
+import ChangeUserPassword from "../../../domain/settings/change-user-password"
+import useToggleState from "../../../hooks/use-toggle-state"
 
 const UserMenu: React.FC = () => {
   const navigate = useNavigate()
 
   const { user, isLoading, remove } = useAdminGetSession()
+  const { state, toggle, close } = useToggleState()
   const { mutate } = useAdminDeleteSession()
 
   const notification = useNotification()
@@ -56,6 +60,17 @@ const UserMenu: React.FC = () => {
               Settings
             </Button>
           </DropdownMenu.Item>
+          <DropdownMenu.Item className="mb-1 outline-none">
+            <Button
+              variant="ghost"
+              size="small"
+              className={"w-full justify-start"}
+              onClick={toggle}
+            >
+              <LockIcon />
+              Change password
+            </Button>
+          </DropdownMenu.Item>
           <DropdownMenu.Item className="outline-none">
             <Button
               variant="ghost"
@@ -69,6 +84,7 @@ const UserMenu: React.FC = () => {
           </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu.Root>
+      <ChangeUserPassword open={state} onClose={close} user={ user } />
     </div>
   )
 }
