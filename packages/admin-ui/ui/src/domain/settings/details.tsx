@@ -142,7 +142,7 @@ const AccountDetails = () => {
                 {...register("payment_link_template")}
                 placeholder="https://acme.inc/payment={payment_id}"
               />
-              <Input
+              {/* <Input
                 className="mt-base"
                 label={t(
                   "settings-invite-link-template",
@@ -150,7 +150,7 @@ const AccountDetails = () => {
                 )}
                 {...register("invite_link_template")}
                 placeholder="https://acme-admin.inc/invite?token={invite_token}"
-              />
+              /> */}
             </div>
           </div>
         </BodyCard>

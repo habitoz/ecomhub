@@ -104,15 +104,15 @@ const ChangeUserPassword = ({  open, onClose, user }: Props) => {
   })
 
   return (
-    <Modal handleClose={onClose} open={open} isLargeModal={false}>
-      <Modal.Header handleClose={onClose}>
+    <Modal handleClose={closeAndReset} open={open} isLargeModal={false}>
+      <Modal.Header handleClose={closeAndReset}>
         <h1 className="inter-xlarge-semibold">
           {t("change-user-password", "Change Your Password")}
         </h1>
       </Modal.Header>
       <Modal.Body>
         <Modal.Content>
-              <div className="gap-y-small flex flex-col items-center">
+              <div className="gap-y-4 flex flex-col ">
                   
                   <div>
                   <SigninInput
@@ -148,7 +148,7 @@ const ChangeUserPassword = ({  open, onClose, user }: Props) => {
         </Modal.Content>
         <Modal.Footer className="border-grey-20 pt-base border-t">
           <div className="gap-x-xsmall flex w-full items-center justify-end">
-            <Button variant="secondary" size="small" onClick={onClose}>
+            <Button variant="secondary" size="small" onClick={closeAndReset}>
               {t("edit-user-information-cancel", "Cancel")}
             </Button>
             <Button

@@ -36,20 +36,10 @@ import {
   }
   
   type WithdrawFormData = {
-    // title: string
-    // description: string | undefined
-    // thumbnail: {
-    //   url: string
-    //   name: string
-    //   size: number
-    //   nativeFile: File
-    // } | null
-    // denominations: {
-    //   amount: number | null
-    // }[], 
     amount: number | null,
     type: Option | null,
-    region: GiftCardRegionFormType
+    region: GiftCardRegionFormType,
+    description: String
   }
   
   const WithdrawCard = ({ onClose, originalAmount }: WithdrawCardProps) => {
@@ -87,115 +77,21 @@ import {
         name: "region.region_id.currency_code",
         defaultValue: "usd",
     })
-    // const { fields, append, remove } = useFieldArray({
-    //   control,
-    //   name: "denominations",
-    // })
-  
-    // const handleFileUpload = (files: File[]) => {
-    //   const file = files[0]
-    //   const url = URL.createObjectURL(file)
-  
-    //   setValue("thumbnail", {
-    //     url,
-    //     name: file.name,
-    //     size: file.size,
-    //     nativeFile: file,
-    //   })
-    // }
-  
-    // const thumbnail = useWatch({
-    //   control,
-    //   name: "thumbnail",
-    // })
+   
   
     const onSubmit = async (data: WithdrawFormData) => {
       console.log("this are with drawal balance and methods",data)
-      alert(data.amount)
+      notification(
+          t("gift-cards-success", "Success"),
+          t(
+            "gift-cards-successfully-created-gift-card",
+            "Successfully created Gift Card"
+          ),
+          "error"
+        )
 
     //   const trimmedName = data.title.trim()
-  
-    //   if (!trimmedName) {
-    //     notification(
-    //       t("gift-cards-error", "Error"),
-    //       t(
-    //         "gift-cards-please-enter-a-name-for-the-gift-card",
-    //         "Please enter a name for the Gift Card"
-    //       ),
-    //       "error"
-    //     )
-    //     focusByName("name")
-    //     return
-    //   }
-  
-    //   if (!data.denominations?.length) {
-    //     notification(
-    //       t("gift-cards-error", "Error"),
-    //       t(
-    //         "gift-cards-please-add-at-least-one-denomination",
-    //         "Please add at least one denomination"
-    //       ),
-    //       "error"
-    //     )
-    //     focusByName("add-denomination")
-    //     return
-    //   }
-  
-    //   let images: string[] = []
-  
-    //   if (thumbnail) {
-    //     const uploadedImgs = await Medusa.uploads
-    //       .create([thumbnail.nativeFile])
-    //       .then(({ data }) => {
-    //         const uploaded = data.uploads.map(({ url }) => url)
-    //         return uploaded
-    //       })
-  
-    //     images = uploadedImgs
-    //   }
-  
-    //   mutate(
-    //     {
-    //       is_giftcard: true,
-    //       title: data.title,
-    //       description: data.description,
-    //       discountable: false,
-    //       options: [{ title: t("gift-cards-denominations", "Denominations") }],
-    //       variants: data.denominations.map((d, i) => ({
-    //         title: `${i + 1}`,
-    //         inventory_quantity: 0,
-    //         manage_inventory: false,
-    //         prices: [
-    //           { amount: d.amount!, currency_code: store?.default_currency_code },
-    //         ],
-    //         options: [{ value: `${d.amount}` }],
-    //       })),
-    //       images: images.length ? images : undefined,
-    //       thumbnail: images.length ? images[0] : undefined,
-    //       status: ProductStatus.PUBLISHED,
-    //     },
-    //     {
-    //       onSuccess: () => {
-    //         notification(
-    //           t("gift-cards-success", "Success"),
-    //           t(
-    //             "gift-cards-successfully-created-gift-card",
-    //             "Successfully created Gift Card"
-    //           ),
-    //           "success"
-    //         )
-    //         refetch()
-    //         navigate("/a/gift-cards/manage")
-    //       },
-    //       onError: (err) => {
-    //         notification(
-    //           t("gift-cards-error", "Error"),
-    //           getErrorMessage(err),
-    //           "error"
-    //         )
-    //       },
-    //     }
-    //   )
+
     }
     return (
       <Modal handleClose={onClose}>
@@ -210,7 +106,7 @@ import {
             </Modal.Header>
             <Modal.Content>
               
-              <div className="mt-xlarge grid grid-cols-2 gap-x-small">
+              <div className="mt-xlarge grid grid-cols-2 gap-y-small gap-x-small">
                 <Controller
                     name={"amount"}
                     rules={{
@@ -262,6 +158,16 @@ import {
                         )
                     }}
                 />
+                <div className="col-span-2">
+                <TextArea
+                  label={t("gift-cards-description", "Description")}
+                  placeholder={t(
+                    "withdrawal-description",
+                    "write some descriptions here........"
+                  )}
+                  {...register("description")}
+                />
+                </div>
               </div>
             </Modal.Content>
             <Modal.Footer>

@@ -79,14 +79,14 @@ const Sidebar: React.FC = () => {
             text={t("sidebar-products", "Products")}
             triggerHandler={triggerHandler}
           />
-          {isFeatureEnabled("product_categories") && (
+          {/* {isFeatureEnabled("product_categories") && (
             <SidebarMenuItem
               pageLink={"/a/product-categories"}
               icon={<SwatchIcon size={ICON_SIZE} />}
               text={t("sidebar-categories", "Categories")}
               triggerHandler={triggerHandler}
             />
-          )}
+          )} */}
           <SidebarMenuItem
             pageLink={"/a/customers"}
             icon={<UsersIcon size={ICON_SIZE} />}
@@ -101,7 +101,7 @@ const Sidebar: React.FC = () => {
               text={t("sidebar-inventory", "Inventory")}
             />
           {/* )} */}
-          <SidebarMenuItem
+          {/* <SidebarMenuItem
             pageLink={"/a/discounts"}
             icon={<SaleIcon size={ICON_SIZE} />}
             triggerHandler={triggerHandler}
@@ -112,7 +112,7 @@ const Sidebar: React.FC = () => {
             icon={<GiftIcon size={ICON_SIZE} />}
             triggerHandler={triggerHandler}
             text={t("sidebar-gift-cards", "Gift Cards")}
-          />
+          /> */}
           <SidebarMenuItem
             pageLink={"/a/pricing"}
             icon={<CashIcon size={ICON_SIZE} />}
