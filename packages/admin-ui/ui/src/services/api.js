@@ -726,4 +726,14 @@ export default {
       return medusaRequest("DELETE", path)
     },
   },
+  merchant: {
+    retrieve() {
+      const path = `/provider/me`
+      return medusaRequest("GET", path)
+    },
+    changePassword(data){
+      const path = `provider/change/${ merchantId }`
+      return medusaRequest("POST", path, data)
+    }
+  }
 }

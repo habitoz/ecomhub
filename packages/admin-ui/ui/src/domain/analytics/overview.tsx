@@ -6,6 +6,7 @@ import {
   useAdminUpdateProduct,
   useAdminCustomers,
   useAdminOrders,
+  useAdminGetSession
 } from "medusa-react"
 import { useMemo, useState } from "react"
 import { useSpring, animated } from "react-spring"
@@ -17,6 +18,8 @@ import ExportIcon from "../../components/fundamentals/icons/export-icon"
 import Button from "../../components/fundamentals/button"
 import Spacer from "../../components/atoms/spacer"
 import Spinner from "../../components/atoms/spinner"
+import Medusa from "../../services/api"
+import useNotification from "../../hooks/use-notification"
 
 type TNumber = {
   n: number
@@ -35,15 +38,47 @@ const Number = ({ n }: TNumber)=>{
 }
 
 
-const Overview = () => {
+const Overview = async () => {
   const { t } = useTranslation()
+  const notification = useNotification()
+  const { user }  = useAdminGetSession()
   const { products, count: countProducts,  isLoading } = useAdminProducts()
   const { customers, count: countCustomers, isLoading: customerLoading } = useAdminCustomers()
   const { orders, count: countOrders, isLoading: ordersLoading } = useAdminOrders()
   const [showNewCollection, setShowNewCollection] = useState(false)
+  const [merchant,  setMerchant] = useState(null)
   const navigate = useNavigate()
+  await Medusa.merchant.retrieve().then((response: any) => {
+    if (response) {
+      setMerchant(response)
+      notification(
+        t("gift-cards-success", "Success"),
+        t(
+          "merchant detail is retrieved successfully."
+        ),
+        "success"
+      )
+    }
+    else{
+      notification(
+        t("gift-cards-success", "Success"),
+        t(
+          response
+        ),
+        "error"
+      )
+    }
+  }).catch((error: any) => {
+    notification(
+      t("gift-cards-success", "Success"),
+      t(
+        error
+      ),
+      "error"
+    )
+  })
   const handleWithdrawBalance  = ()=>{
-
+    
   }
 
   return (
@@ -60,7 +95,7 @@ const Overview = () => {
             <div className="rounded-rounded cusrsor-pointer bg-grey-0 border-grey-20 p-base  w-full border">
               <div className=" flex justify-center items-center">
                 <div className="w-full flex flex-col justify-center items-center">
-                  <h1 className="inter-large-semibold mb-xsmall flex">$ <Number n={50000000000}/></h1>
+                  <h1 className="inter-large-semibold mb-xsmall flex">$ <Number n={50000000000000000}/></h1>
                   <h2 className="inter-base-regular text-grey-50">Total Balance</h2>
                 </div>
                 <div className="flex space-x-2">

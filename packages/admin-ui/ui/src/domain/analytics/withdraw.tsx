@@ -80,7 +80,6 @@ import {
    
   
     const onSubmit = async (data: WithdrawFormData) => {
-      console.log("this are with drawal balance and methods",data)
       notification(
           t("gift-cards-success", "Success"),
           t(
