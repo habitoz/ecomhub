@@ -8,7 +8,7 @@ import {
   useAdminOrders,
   useAdminGetSession
 } from "medusa-react"
-import { useMemo, useState } from "react"
+import { useMemo, useState, useEffect } from "react"
 import { useSpring, animated } from "react-spring"
 import { useNavigate, NavLink } from "react-router-dom"
 import { useTranslation } from "react-i18next"
@@ -38,7 +38,7 @@ const Number = ({ n }: TNumber)=>{
 }
 
 
-const Overview = async () => {
+const Overview =  () => {
   const { t } = useTranslation()
   const notification = useNotification()
   const { user }  = useAdminGetSession()
@@ -46,67 +46,88 @@ const Overview = async () => {
   const { customers, count: countCustomers, isLoading: customerLoading } = useAdminCustomers()
   const { orders, count: countOrders, isLoading: ordersLoading } = useAdminOrders()
   const [showNewCollection, setShowNewCollection] = useState(false)
-  const [merchant,  setMerchant] = useState(null)
+  const [merchant,  setMerchant] = useState<any>(null)
   const navigate = useNavigate()
-  await Medusa.merchant.retrieve().then((response: any) => {
-    if (response) {
-      setMerchant(response)
-      notification(
-        t("gift-cards-success", "Success"),
-        t(
-          "merchant detail is retrieved successfully."
-        ),
-        "success"
-      )
+  useEffect(()=>{
+    const getMerchant = async () => {
+      await Medusa.merchant.retrieve().then((response: any) => {
+        if (response) {
+          setMerchant(response)
+          notification(
+            t("gift-cards-success", "Success"),
+            t(
+              "merchant detail is retrieved successfully."
+            ),
+            "success"
+          )
+        }
+        else{
+          notification(
+            t("gift-cards-success", "Success"),
+            t(
+              response
+            ),
+            "error"
+          )
+        }
+      }).catch((error: any) => {
+        notification(
+          t("gift-cards-success", "Success"),
+          t(
+            error
+          ),
+          "error"
+        )
+      })
     }
-    else{
-      notification(
-        t("gift-cards-success", "Success"),
-        t(
-          response
-        ),
-        "error"
-      )
-    }
-  }).catch((error: any) => {
-    notification(
-      t("gift-cards-success", "Success"),
-      t(
-        error
-      ),
-      "error"
-    )
-  })
-  const handleWithdrawBalance  = ()=>{
-    
-  }
+    getMerchant()
+  }, [])
+
 
   return (
     <>
       <div className="flex flex-col">
-        <PageDescription
-          title={t("analytics-card", "Analytics")}
-          subtitle={t(
-            "analytics-card-manage",
-            "Manage the Gift Cards of your Medusa store"
-          )}
-        />
+        <div className="flex w-full items-center">
+          <PageDescription
+            title={t("analytics-card", "Analytics")}
+            subtitle={t(
+              "analytics-card-manage",
+              "Manage the Gift Cards of your Medusa store"
+            )}
+          />
+          <div className="w-full flex justify-end space-x-2">
+              <Button
+                variant="secondary"
+                size="small"
+                onClick={() => setShowNewCollection(!showNewCollection)}
+              >
+                <ExportIcon size={20} />
+                {t("withdraw-new", "Withdraw")}
+              </Button>
+          </div>
+        </div>
         <div className="medium:grid-cols-2 gap-y-xsmall grid grid-cols-1 gap-x-4">
             <div className="rounded-rounded cusrsor-pointer bg-grey-0 border-grey-20 p-base  w-full border">
               <div className=" flex justify-center items-center">
                 <div className="w-full flex flex-col justify-center items-center">
-                  <h1 className="inter-large-semibold mb-xsmall flex">$ <Number n={50000000000000000}/></h1>
+                  <h1 className="inter-large-semibold mb-xsmall flex">$ <Number n={merchant.balance}/></h1>
                   <h2 className="inter-base-regular text-grey-50">Total Balance</h2>
                 </div>
-                <div className="flex space-x-2">
-                  <Button
-                    variant="secondary"
-                    size="small"
-                    onClick={() => setShowNewCollection(!showNewCollection)}
-                  >
-                    <ExportIcon size={20} />
-                    {t("withdraw-new", "Withdraw")}
-                  </Button>
+              </div>
+            </div>
+            <div className="rounded-rounded cusrsor-pointer bg-grey-0 border-grey-20 p-base  w-full border">
+              <div className=" flex justify-center items-center">
+                <div className="w-full flex flex-col justify-center items-center">
+                  <h1 className="inter-large-semibold mb-xsmall flex">$ <Number n={merchant.debit}/></h1>
+                  <h2 className="inter-base-regular text-grey-50">Total debit</h2>
+                </div>
+              </div>
+            </div>
+            <div className="rounded-rounded cusrsor-pointer bg-grey-0 border-grey-20 p-base  w-full border">
+              <div className=" flex justify-center items-center">
+                <div className="w-full flex flex-col justify-center items-center">
+                  <h1 className="inter-large-semibold mb-xsmall flex">$ <Number n={merchant.credit}/></h1>
+                  <h2 className="inter-base-regular text-grey-50">Total credit</h2>
                 </div>
               </div>
             </div>
