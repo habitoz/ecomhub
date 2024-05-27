@@ -38,7 +38,7 @@ interface Merchant {
   debit?: number
   balance?: number
   status?: string
-  [key: string]: any // Index signature for dynamic properties
+  [key: string]: any 
 }
 const Number = ({ n }: TNumber) => {
   const { number } = useSpring({
@@ -67,18 +67,14 @@ const Overview = () => {
     isLoading: ordersLoading,
   } = useAdminOrders()
   const [showNewCollection, setShowNewCollection] = useState(false)
-  let [merchantD, setMerchant] = useState({})
+  const [merchantD, setMerchant] = useState<Merchant | null>(null)
   const navigate = useNavigate()
-  let merchants: any = null
-
   useEffect(() => {
     const getMerchant = async () => {
       try {
         let response = await Medusa.merchant.retrieve()
         if (response.statusText === "OK") {
           setMerchant(response.data)
-          merchants = response.data
-          console.log(merchantD)
           notification(
             t("gift-cards-success", "Success"),
             t("Merchant detail is retrieved successfully."),
@@ -129,7 +125,7 @@ const Overview = () => {
             <div className=" flex items-center justify-center">
               <div className="flex w-full flex-col items-center justify-center">
                 <h1 className="inter-large-semibold mb-xsmall flex">
-                  $ <Number n={merchants?.balance} />
+                  $ <Number n={merchantD?.balance ?? 0} />
                 </h1>
                 <h2 className="inter-base-regular text-grey-50">
                   Total Balance
@@ -141,7 +137,7 @@ const Overview = () => {
             <div className=" flex items-center justify-center">
               <div className="flex w-full flex-col items-center justify-center">
                 <h1 className="inter-large-semibold mb-xsmall flex">
-                  $ <Number n={merchants?.debit} />
+                  $ <Number n={merchantD?.debit ?? 0} />
                 </h1>
                 <h2 className="inter-base-regular text-grey-50">debit</h2>
               </div>
@@ -151,7 +147,7 @@ const Overview = () => {
             <div className=" flex items-center justify-center">
               <div className="flex w-full flex-col items-center justify-center">
                 <h1 className="inter-large-semibold mb-xsmall flex">
-                  $ <Number n={merchants?.credit} />
+                  $ <Number n={merchantD?.credit ?? 0} />
                 </h1>
                 <h2 className="inter-base-regular text-grey-50">credit</h2>
               </div>
@@ -213,7 +209,7 @@ const Overview = () => {
         {showNewCollection && (
           <WithdrawBalance
             onClose={() => setShowNewCollection(!showNewCollection)}
-            originalAmount={merchants ? merchants?.balance : 0}
+            originalAmount={merchantD?.balance ?? 0}
           />
         )}
       </div>

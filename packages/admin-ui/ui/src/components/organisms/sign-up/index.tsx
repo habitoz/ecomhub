@@ -15,10 +15,10 @@ type FormValues = {
 
 type LoginCardProps = {
   toResetPassword: () => void
-  toSignUp: () => void
+  toLogin: () => void
 }
 
-const LoginCard = ({ toResetPassword, toSignUp }: LoginCardProps) => {
+const LoginCard = ({ toResetPassword, toLogin }: LoginCardProps) => {
   const {
     register,
     handleSubmit,
@@ -68,9 +68,23 @@ const LoginCard = ({ toResetPassword, toSignUp }: LoginCardProps) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col items-center">
           <h1 className="inter-xlarge-semibold text-grey-90 mb-large text-[20px]">
-            {t("login-card-log-in-to-medusa", "Log in")}
+            {t("signup-card-sign-up-to-medusa", "Sign Up")}
           </h1>
-          <div>
+          <div className="grid grid-cols-2">
+            <SigninInput
+              placeholder={t("login-card-email", "Email")}
+              {...register("email", { required: true })}
+              autoComplete="email"
+              className="mb-small"
+            />
+            <SigninInput
+              placeholder={t("login-card-password", "Password")}
+              type={"password"}
+              {...register("password", { required: true })}
+              autoComplete="current-password"
+              className="mb-xsmall"
+            />
+            <InputError errors={errors} name="password" />
             <SigninInput
               placeholder={t("login-card-email", "Email")}
               {...register("email", { required: true })}
@@ -93,21 +107,16 @@ const LoginCard = ({ toResetPassword, toSignUp }: LoginCardProps) => {
             type="submit"
             loading={isLoading}
           >
-            Continue
+            create Account
           </Button>
-          <div className="flex w-full justify-between">
-            <span
-              className="inter-small-regular text-grey-50 mt-8 cursor-pointer"
-              onClick={toResetPassword}
-            >
-              {t("login-card-forgot-your-password", "Forgot your password?")}
-            </span>
-            <span
-              className="inter-small-regular font-semibold mt-8 text-grey-50 cursor-pointer"
-              onClick={toSignUp}
-            >
-              {t("sign-up", "Sign Up")}
-            </span>
+          <div className="flex w-full justify-between inter-small-regular space-x-2 text-grey-50 mt-xlarge">
+              <span>Already signed up? </span>
+              <span
+                className="inter-small-regular font-semibold  text-grey-50 cursor-pointer"
+                onClick={toLogin}
+              >
+                {t("sign-in", "Sign In")}
+              </span>
           </div>
         </div>
       </form>

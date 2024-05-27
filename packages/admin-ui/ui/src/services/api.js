@@ -731,6 +731,10 @@ export default {
       const path = `/provider/me`
       return medusaRequest("GET", path)
     },
+    create(data){
+      const path = `provider/merchant`
+      return medusaRequest("POST", path, data)
+    },
     changePassword(data){
       const path = `provider/change/${ merchantId }`
       return medusaRequest("POST", path, data)
