@@ -24,7 +24,22 @@ import useNotification from "../../hooks/use-notification"
 type TNumber = {
   n: number
 }
-
+interface Merchant {
+  id?: string
+  created_at?: string
+  updated_at?: string
+  businessName?: string
+  tin?: string
+  contactPersonFullname?: string
+  contactPersonEmail?: string
+  contactPersonPhone?: string
+  logo?: string
+  credit?: number
+  debit?: number
+  balance?: number
+  status?: string
+  [key: string]: any // Index signature for dynamic properties
+}
 const Number = ({ n }: TNumber) => {
   const { number } = useSpring({
     from: { number: 0 },
@@ -52,31 +67,37 @@ const Overview = () => {
     isLoading: ordersLoading,
   } = useAdminOrders()
   const [showNewCollection, setShowNewCollection] = useState(false)
-  const [merchant, setMerchant] = useState<any>(null)
+  let [merchantD, setMerchant] = useState({})
   const navigate = useNavigate()
+  let merchants: any = null
+
   useEffect(() => {
     const getMerchant = async () => {
-      await Medusa.merchant
-        .retrieve()
-        .then((response: any) => {
-          if (response) {
-            setMerchant(response)
-            notification(
-              t("gift-cards-success", "Success"),
-              t("merchant detail is retrieved successfully."),
-              "success"
-            )
-          } else {
-            notification(
-              t("gift-cards-success", "Success"),
-              t(response),
-              "error"
-            )
-          }
-        })
-        .catch((error: any) => {
-          notification(t("gift-cards-success", "Success"), t(error), "error")
-        })
+      try {
+        let response = await Medusa.merchant.retrieve()
+        if (response.statusText === "OK") {
+          setMerchant(response.data)
+          merchants = response.data
+          console.log(merchantD)
+          notification(
+            t("gift-cards-success", "Success"),
+            t("Merchant detail is retrieved successfully."),
+            "success"
+          )
+        } else {
+          notification(
+            t("gift-cards-error", "Error"),
+            t(`error response ${response.status} `),
+            "error"
+          )
+        }
+      } catch (error) {
+        notification(
+          t("gift-cards-error", "Error"),
+          t("An error occurred while retrieving the merchant details."),
+          "error"
+        )
+      }
     }
     getMerchant()
   }, [])
@@ -108,20 +129,19 @@ const Overview = () => {
             <div className=" flex items-center justify-center">
               <div className="flex w-full flex-col items-center justify-center">
                 <h1 className="inter-large-semibold mb-xsmall flex">
-                  $ <Number n={merchant?.balance} />
+                  $ <Number n={merchants?.balance} />
                 </h1>
                 <h2 className="inter-base-regular text-grey-50">
                   Total Balance
                 </h2>
               </div>
-              {merchant}
             </div>
           </div>
           <div className="rounded-rounded cusrsor-pointer bg-grey-0 border-grey-20 p-base  w-full border">
             <div className=" flex items-center justify-center">
               <div className="flex w-full flex-col items-center justify-center">
                 <h1 className="inter-large-semibold mb-xsmall flex">
-                  $ <Number n={merchant?.debit} />
+                  $ <Number n={merchants?.debit} />
                 </h1>
                 <h2 className="inter-base-regular text-grey-50">debit</h2>
               </div>
@@ -131,7 +151,7 @@ const Overview = () => {
             <div className=" flex items-center justify-center">
               <div className="flex w-full flex-col items-center justify-center">
                 <h1 className="inter-large-semibold mb-xsmall flex">
-                  $ <Number n={merchant?.credit} />
+                  $ <Number n={merchants?.credit} />
                 </h1>
                 <h2 className="inter-base-regular text-grey-50">credit</h2>
               </div>
@@ -193,7 +213,7 @@ const Overview = () => {
         {showNewCollection && (
           <WithdrawBalance
             onClose={() => setShowNewCollection(!showNewCollection)}
-            originalAmount={merchant ? merchant?.balance : 0}
+            originalAmount={merchants ? merchants?.balance : 0}
           />
         )}
       </div>
