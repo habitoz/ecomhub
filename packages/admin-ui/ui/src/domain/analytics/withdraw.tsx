@@ -84,7 +84,7 @@ const WithdrawCard = ({ onClose, originalAmount }: WithdrawCardProps) => {
         "gift-cards-successfully-created-gift-card",
         "Successfully created Gift Card"
       ),
-      "error"
+      "success"
     )
 
     //   const trimmedName = data.title.trim()
@@ -108,12 +108,12 @@ const WithdrawCard = ({ onClose, originalAmount }: WithdrawCardProps) => {
                   required: FormValidator.required("Balance"),
                   min: {
                     value: 0,
-                    message: "Balance must be greater than 0",
+                    message: "Amount must be greater than 0",
                   },
                   max: originalAmount
                     ? {
                         value: originalAmount,
-                        message: `The updated balance cannot exceed the original value of ${formatAmountWithSymbol(
+                        message: `The withdrawal amount cannot exceed your current balance of  ${formatAmountWithSymbol(
                           {
                             amount: originalAmount,
                             currency: currencySubscriber,
