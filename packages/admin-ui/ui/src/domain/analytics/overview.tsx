@@ -68,13 +68,20 @@ const Overview = () => {
   } = useAdminOrders()
   const [showNewCollection, setShowNewCollection] = useState(false)
   const [merchantD, setMerchant] = useState<Merchant | null>(null)
+  const [balance,  setBalance] = useState(0)
+  const [credit,  setCredit] = useState(0)
+  const [debit,  setDebit] = useState(0)
   const navigate = useNavigate()
-  useEffect(() => {
+  // useEffect(() => {  
     const getMerchant = async () => {
       try {
         let response = await Medusa.merchant.retrieve()
         if (response.statusText === "OK") {
-          setMerchant(response.data as Merchant)
+          setMerchant(response.data)
+          setBalance(response.data.balance)
+          setCredit(response.data.credit)
+          setDebit(response.data.debit)
+
           notification(
             t("gift-cards-success", "Success"),
             t("Merchant detail is retrieved successfully."),
@@ -96,7 +103,7 @@ const Overview = () => {
       }
     }
     getMerchant()
-  }, [])
+  // }, [])
 
   return (
     <>
@@ -125,7 +132,7 @@ const Overview = () => {
             <div className=" flex items-center justify-center">
               <div className="flex w-full flex-col items-center justify-center">
                 <h1 className="inter-large-semibold mb-xsmall flex">
-                  $ <Number n={merchantD?.balance ?? 0} />
+                  {balance}
                 </h1>
                 <h2 className="inter-base-regular text-grey-50">
                   Total Balance
@@ -137,7 +144,7 @@ const Overview = () => {
             <div className=" flex items-center justify-center">
               <div className="flex w-full flex-col items-center justify-center">
                 <h1 className="inter-large-semibold mb-xsmall flex">
-                  $ <Number n={merchantD?.debit ?? 0} />
+                  {debit}
                 </h1>
                 <h2 className="inter-base-regular text-grey-50">debit</h2>
               </div>
@@ -147,7 +154,7 @@ const Overview = () => {
             <div className=" flex items-center justify-center">
               <div className="flex w-full flex-col items-center justify-center">
                 <h1 className="inter-large-semibold mb-xsmall flex">
-                  $ <Number n={merchantD?.credit ?? 0} />
+                  { credit }
                 </h1>
                 <h2 className="inter-base-regular text-grey-50">credit</h2>
               </div>
