@@ -1,21 +1,19 @@
 import { useAdminLogin } from "medusa-react"
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
-import { useWidgets } from "../../../providers/widget-provider"
 import { useTranslation } from "react-i18next"
-import InputError from "../../atoms/input-error"
-import WidgetContainer from "../../extensions/widget-container"
 import Button from "../../fundamentals/button"
 import InputField from "../../molecules/input"
-import FileUploadField from "../../atoms/file-upload-field"
 import Medusa from "../../../services/api"
+import ThumbnailForm , { ThumbnailFormType } from "../../forms/product/thumbnail-form"
+import { nestedForm } from "../../../utils/nested-form"
 
 type FormValues = {
   businessName: string
   contactPersonFullName: string
   contactPersonEmail: string
   contactPersonPhone: string
-  logo?: string | null
+  thumbnail: ThumbnailFormType
 }
 
 type SignUpProps = {
@@ -23,18 +21,21 @@ type SignUpProps = {
 }
 
 const SignupCard = ({ toLogin }: SignUpProps) => {
+  const form = useForm<FormValues>()
   const {
     register,
     handleSubmit,
     setError,
     formState: { errors },
     reset
-  } = useForm<FormValues>()
+  } = form
+
   const navigate = useNavigate()
   const { mutate, isLoading } = useAdminLogin()
   const { t } = useTranslation()
 
   const onSubmit = async (values: FormValues) => {
+
     const formData = new FormData()
     formData.append("businessName", values.businessName)
     formData.append("contactPersonFullName", values.contactPersonFullName)
@@ -80,10 +81,9 @@ const SignupCard = ({ toLogin }: SignUpProps) => {
                 {...register("contactPersonPhone", { required: true })}
                 errors={errors}
               />
-
           </div>
           <Button
-            className="rounded-rounded inter-base-regular mt-4 w-[300px]"
+            className="rounded-rounded inter-base-regular bg-orange-30 mt-4 w-[300px]"
             variant="secondary"
             size="medium"
             type="submit"
@@ -91,7 +91,7 @@ const SignupCard = ({ toLogin }: SignUpProps) => {
           >
             create Account
           </Button>
-          <div className="flex w-full justify-between inter-small-regular space-x-2 text-grey-50 mt-xlarge">
+          <div className="flex w-full inter-small-regular space-x-2 text-grey-50 ">
               <span>Already signed up? </span>
               <span
                 className="inter-small-regular font-semibold  text-grey-50 cursor-pointer"

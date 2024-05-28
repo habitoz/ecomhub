@@ -24,21 +24,20 @@ import useNotification from "../../hooks/use-notification"
 type TNumber = {
   n: number
 }
-type Merchant =  {
-  id?: string
-  created_at?: string
-  updated_at?: string
-  businessName?: string
-  tin?: string
-  contactPersonFullname?: string
-  contactPersonEmail?: string
-  contactPersonPhone?: string
-  logo?: string
+interface Merchant {
+  id: string
+  created_at: string
+  updated_at: string
+  businessName: string
+  tin: string
+  contactPersonFullname: string
+  contactPersonEmail: string
+  contactPersonPhone: string
+  logo: string
   credit: number
   debit: number
   balance: number
-  status?: string
-  [key: string]: any 
+  status: string
 }
 const Number = ({ n }: TNumber) => {
   const { number } = useSpring({
@@ -72,12 +71,12 @@ const Overview = () => {
   const [credit,  setCredit] = useState(0)
   const [debit,  setDebit] = useState(0)
   const navigate = useNavigate()
-  // useEffect(() => {  
+  useEffect(() => {  
     const getMerchant = async () => {
       try {
         let response = await Medusa.merchant.retrieve()
         if (response.statusText === "OK") {
-          setMerchant(response.data)
+          setMerchant(response.data as Merchant)
           setBalance(response.data.balance)
           setCredit(response.data.credit)
           setDebit(response.data.debit)
@@ -94,16 +93,16 @@ const Overview = () => {
             "error"
           )
         }
-      } catch (error) {
+      } catch (error: any) {
         notification(
           t("gift-cards-error", "Error"),
-          t("An error occurred while retrieving the merchant details."),
+          t(`${error.message}`),
           "error"
         )
       }
     }
     getMerchant()
-  // }, [])
+  }, [])
 
   return (
     <>
@@ -132,7 +131,7 @@ const Overview = () => {
             <div className=" flex items-center justify-center">
               <div className="flex w-full flex-col items-center justify-center">
                 <h1 className="inter-large-semibold mb-xsmall flex">
-                  {balance}
+                  {balance} {merchantD ? merchantD.balance: "kbrom"}
                 </h1>
                 <h2 className="inter-base-regular text-grey-50">
                   Total Balance
@@ -144,7 +143,7 @@ const Overview = () => {
             <div className=" flex items-center justify-center">
               <div className="flex w-full flex-col items-center justify-center">
                 <h1 className="inter-large-semibold mb-xsmall flex">
-                  {debit}
+                  {debit }
                 </h1>
                 <h2 className="inter-base-regular text-grey-50">debit</h2>
               </div>
@@ -216,7 +215,7 @@ const Overview = () => {
         {showNewCollection && (
           <WithdrawBalance
             onClose={() => setShowNewCollection(!showNewCollection)}
-            originalAmount={merchantD?.balance ?? 0}
+            originalAmount={ merchantD? merchantD.balance : 0}
           />
         )}
       </div>
