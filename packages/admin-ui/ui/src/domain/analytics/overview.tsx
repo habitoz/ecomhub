@@ -131,7 +131,7 @@ const Overview = () => {
             <div className=" flex items-center justify-center">
               <div className="flex w-full flex-col items-center justify-center">
                 <h1 className="inter-large-semibold mb-xsmall flex">
-                  {balance} {merchantD ? merchantD.balance: "kbrom"}
+                  {balance} 
                 </h1>
                 <h2 className="inter-base-regular text-grey-50">
                   Total Balance
