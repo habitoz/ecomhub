@@ -112,7 +112,7 @@ const ChangeUserPassword = ({  open, onClose, user }: Props) => {
       </Modal.Header>
       <Modal.Body>
         <Modal.Content>
-              <div className="gap-y-4 flex flex-col ">
+              <div className="gap-y-4 flex flex-col w-full ">
                   
                   <div>
                   <SigninInput

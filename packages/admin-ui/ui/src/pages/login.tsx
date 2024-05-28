@@ -30,6 +30,7 @@ const LoginPage = () => {
 
   const showLogin = () => {
     setResetPassword(false)
+    setSignUp(false)
     navigate("/login", { replace: true })
   }
 
@@ -48,7 +49,7 @@ const LoginPage = () => {
       {resetPassword ? (
         <ResetTokenCard goBack={showLogin} />
       ) :( signUp ?  (
-        <SignupCard toResetPassword={showResetPassword} toLogin = { showLogin} />
+        <SignupCard  toLogin = { showLogin} />
       ) : ( <LoginCard toResetPassword={showResetPassword} toSignUp = { showSignUp} /> ))
       }
     </PublicLayout>

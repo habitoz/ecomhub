@@ -6,99 +6,81 @@ import { useTranslation } from "react-i18next"
 import InputError from "../../atoms/input-error"
 import WidgetContainer from "../../extensions/widget-container"
 import Button from "../../fundamentals/button"
-import SigninInput from "../../molecules/input-signin"
+import InputField from "../../molecules/input"
+import FileUploadField from "../../atoms/file-upload-field"
+import Medusa from "../../../services/api"
 
 type FormValues = {
-  email: string
-  password: string
+  businessName: string
+  contactPersonFullName: string
+  contactPersonEmail: string
+  contactPersonPhone: string
+  logo?: string | null
 }
 
-type LoginCardProps = {
-  toResetPassword: () => void
+type SignUpProps = {
   toLogin: () => void
 }
 
-const LoginCard = ({ toResetPassword, toLogin }: LoginCardProps) => {
+const SignupCard = ({ toLogin }: SignUpProps) => {
   const {
     register,
     handleSubmit,
     setError,
     formState: { errors },
+    reset
   } = useForm<FormValues>()
   const navigate = useNavigate()
   const { mutate, isLoading } = useAdminLogin()
   const { t } = useTranslation()
 
-  const { getWidgets } = useWidgets()
-
-  const onSubmit = (values: FormValues) => {
-    mutate(values, {
-      onSuccess: () => {
-        navigate("/a/analytics")
-      },
-      onError: () => {
-        setError(
-          "password",
-          {
-            type: "manual",
-            message: t(
-              "login-card-no-match",
-              "These credentials do not match our records."
-            ),
-          },
-          {
-            shouldFocus: true,
-          }
-        )
-      },
-    })
+  const onSubmit = async (values: FormValues) => {
+    const formData = new FormData()
+    formData.append("businessName", values.businessName)
+    formData.append("contactPersonFullName", values.contactPersonFullName)
+    formData.append("contactPersonEmail", values.contactPersonEmail)
+    formData.append("contactPersonPhone", values.contactPersonPhone)
+    formData.append("logo", "")
+    let response = await Medusa.merchant.create(formData)
+    if(response.statusText === "OK") console.log("success")
   }
   return (
-    <div className="gap-y-large flex flex-col">
-      {getWidgets("login.before").map((w, i) => {
-        return (
-          <WidgetContainer
-            key={i}
-            widget={w}
-            injectionZone="login.before"
-            entity={undefined}
-          />
-        )
-      })}
+    <div className="gap-y-small flex flex-col">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col items-center">
           <h1 className="inter-xlarge-semibold text-grey-90 mb-large text-[20px]">
             {t("signup-card-sign-up-to-medusa", "Sign Up")}
           </h1>
-          <div className="grid grid-cols-2">
-            <SigninInput
-              placeholder={t("login-card-email", "Email")}
-              {...register("email", { required: true })}
-              autoComplete="email"
-              className="mb-small"
-            />
-            <SigninInput
-              placeholder={t("login-card-password", "Password")}
-              type={"password"}
-              {...register("password", { required: true })}
-              autoComplete="current-password"
-              className="mb-xsmall"
-            />
-            <InputError errors={errors} name="password" />
-            <SigninInput
-              placeholder={t("login-card-email", "Email")}
-              {...register("email", { required: true })}
-              autoComplete="email"
-              className="mb-small"
-            />
-            <SigninInput
-              placeholder={t("login-card-password", "Password")}
-              type={"password"}
-              {...register("password", { required: true })}
-              autoComplete="current-password"
-              className="mb-xsmall"
-            />
-            <InputError errors={errors} name="password" />
+          <div className="grid grid-cols-2 gap-4">
+            <InputField
+                label={t("Business Name")}
+                placeholder="electronics"
+                required
+                {...register("businessName", { required: true })}
+                errors={errors}
+              />
+            <InputField
+                label={t("contact Person Full Name")}
+                placeholder="haben mehari"
+                required
+                {...register("contactPersonFullName", { required: true })}
+                errors={errors}
+              />
+            <InputField
+                label={t("contact Person Email")}
+                placeholder="lebron@james.com"
+                required
+                {...register("contactPersonEmail", { required: true })}
+                errors={errors}
+              />
+            <InputField
+                label={t("contact Person Phone")}
+                placeholder="098765432"
+                required
+                {...register("contactPersonPhone", { required: true })}
+                errors={errors}
+              />
+
           </div>
           <Button
             className="rounded-rounded inter-base-regular mt-4 w-[300px]"
@@ -120,18 +102,8 @@ const LoginCard = ({ toResetPassword, toLogin }: LoginCardProps) => {
           </div>
         </div>
       </form>
-      {getWidgets("login.after").map((w, i) => {
-        return (
-          <WidgetContainer
-            key={i}
-            widget={w}
-            injectionZone="login.after"
-            entity={undefined}
-          />
-        )
-      })}
     </div>
   )
 }
 
-export default LoginCard
+export default SignupCard

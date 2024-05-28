@@ -95,7 +95,7 @@ const LoginCard = ({ toResetPassword, toSignUp }: LoginCardProps) => {
           >
             Continue
           </Button>
-          <div className="flex w-full justify-between">
+          <div className="flex w-full space-x-2">
             <span
               className="inter-small-regular text-grey-50 mt-8 cursor-pointer"
               onClick={toResetPassword}

@@ -41,9 +41,6 @@ type WithdrawFormData = {
 }
 
 const WithdrawCard = ({ onClose, originalAmount }: WithdrawCardProps) => {
-  const { store } = useAdminStore()
-  const { refetch } = useAdminProducts()
-  const { mutate, isLoading } = useAdminCreateProduct()
   const navigate = useNavigate()
   const notification = useNotification()
   const { t } = useTranslation()
@@ -74,20 +71,43 @@ const WithdrawCard = ({ onClose, originalAmount }: WithdrawCardProps) => {
   const currencySubscriber = useWatch({
     control,
     name: "region.region_id.currency_code",
-    defaultValue: "usd",
+    defaultValue: "etb",
   })
 
   const onSubmit = async (data: WithdrawFormData) => {
-    notification(
-      t("gift-cards-success", "Success"),
-      t(
-        "gift-cards-successfully-created-gift-card",
-        "Successfully created Gift Card"
-      ),
-      "success"
-    )
-
-    //   const trimmedName = data.title.trim()
+    let newData: any = {
+      amount: data.amount,
+      description: data.description
+    } 
+    try {
+      let response = await Medusa.merchant.requestWithdraw(newData)
+      if(response.statusText === "OK"){
+        notification(
+          t("gift-cards-success", "Success"),
+          t(
+            "your withdraw request is successful."
+          ),
+          "success"
+        )
+      }
+      else{
+        notification(
+          t("Error"),
+          t(
+            "your withdraw request is failed. please try again!"
+          ),
+          "error"
+        )
+      }
+    } catch (error) {
+      notification(
+        t("Error"),
+        t(
+          `${error}`
+        ),
+        "error"
+      )
+    }
   }
   return (
     <Modal handleClose={onClose}>
@@ -101,7 +121,7 @@ const WithdrawCard = ({ onClose, originalAmount }: WithdrawCardProps) => {
             </div>
           </Modal.Header>
           <Modal.Content>
-            <div className="mt-xlarge gap-y-small gap-x-small grid grid-cols-2">
+            <div className="mt-xlarge gap-y-small gap-x-small grid grid-cols-1 w-full">
               <Controller
                 name={"amount"}
                 rules={{
@@ -137,7 +157,7 @@ const WithdrawCard = ({ onClose, originalAmount }: WithdrawCardProps) => {
                   )
                 }}
               />
-              <Controller
+              {/* <Controller
                 name={"type"}
                 control={control}
                 render={({ field: { value, onChange } }) => {
@@ -152,7 +172,7 @@ const WithdrawCard = ({ onClose, originalAmount }: WithdrawCardProps) => {
                     />
                   )
                 }}
-              />
+              /> */}
               <div className="col-span-2">
                 <TextArea
                   label={t("gift-cards-description", "Description")}

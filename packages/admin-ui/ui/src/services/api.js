@@ -735,6 +735,14 @@ export default {
       const path = `provider/merchant`
       return medusaRequest("POST", path, data)
     },
+    requestWithdraw(data){
+      const path = `provider/withdraw_request`
+      return medusaRequest("POST", path, data)
+    },
+    getWithdraw(){
+      const path = `provider/withdraw_request`
+      return medusaRequest("GET", path)
+    },
     changePassword(data){
       const path = `provider/change/${ merchantId }`
       return medusaRequest("POST", path, data)

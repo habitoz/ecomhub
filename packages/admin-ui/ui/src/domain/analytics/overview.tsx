@@ -24,7 +24,7 @@ import useNotification from "../../hooks/use-notification"
 type TNumber = {
   n: number
 }
-interface Merchant {
+type Merchant =  {
   id?: string
   created_at?: string
   updated_at?: string
@@ -34,9 +34,9 @@ interface Merchant {
   contactPersonEmail?: string
   contactPersonPhone?: string
   logo?: string
-  credit?: number
-  debit?: number
-  balance?: number
+  credit: number
+  debit: number
+  balance: number
   status?: string
   [key: string]: any 
 }
@@ -74,7 +74,7 @@ const Overview = () => {
       try {
         let response = await Medusa.merchant.retrieve()
         if (response.statusText === "OK") {
-          setMerchant(response.data)
+          setMerchant(response.data as Merchant)
           notification(
             t("gift-cards-success", "Success"),
             t("Merchant detail is retrieved successfully."),
