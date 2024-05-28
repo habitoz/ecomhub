@@ -6,7 +6,6 @@ import SignupCard from "../components/organisms/sign-up"
 import ResetTokenCard from "../components/organisms/reset-token-card"
 import SEO from "../components/seo"
 import PublicLayout from "../components/templates/login-layout"
-
 const LoginPage = () => {
   const [resetPassword, setResetPassword] = useState(false)
   const [signUp, setSignUp] = useState(false)

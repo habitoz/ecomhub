@@ -1,4 +1,6 @@
 import { lazy, Suspense } from "react"
+import { MedusaProvider } from "medusa-react"
+import { QueryClient } from "@tanstack/react-query"
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -15,7 +17,7 @@ const IndexPage = lazy(() => import("./pages/index"))
 const InvitePage = lazy(() => import("./pages/invite"))
 const LoginPage = lazy(() => import("./pages/login"))
 const ResetPasswordPage = lazy(() => import("./pages/reset-password"))
-
+const queryClient = new QueryClient()
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
@@ -55,8 +57,14 @@ const Loading = () => (
 
 const App = () => (
   <Suspense fallback={<Loading />}>
-    <RouterProvider router={router} />
+    {/* <MedusaProvider
+        queryClientProviderProps={{ client: queryClient }}
+        baseUrl="http://localhost:9000"
+    > */}
+      <RouterProvider router={router} />
+    {/* </MedusaProvider> */}
   </Suspense>
 )
+
 
 export default App
