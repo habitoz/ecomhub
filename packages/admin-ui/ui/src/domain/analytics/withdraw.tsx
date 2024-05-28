@@ -121,7 +121,7 @@ const WithdrawCard = ({ onClose, originalAmount }: WithdrawCardProps) => {
             </div>
           </Modal.Header>
           <Modal.Content>
-            <div className="mt-xlarge gap-y-small gap-x-small grid grid-cols-1 w-full">
+            <div className="gap-y-small gap-x-small grid grid-cols-1 w-full">
               <Controller
                 name={"amount"}
                 rules={{

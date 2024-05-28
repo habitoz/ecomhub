@@ -80,12 +80,11 @@ const Overview = () => {
           setBalance(response.data.balance)
           setCredit(response.data.credit)
           setDebit(response.data.debit)
-
-          notification(
-            t("gift-cards-success", "Success"),
-            t("Merchant detail is retrieved successfully."),
-            "success"
-          )
+          // notification(
+          //   t("gift-cards-success", "Success"),
+          //   t("Merchant detail is retrieved successfully."),
+          //   "success"
+          // )
         } else {
           notification(
             t("gift-cards-error", "Error"),
