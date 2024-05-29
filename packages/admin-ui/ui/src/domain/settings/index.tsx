@@ -49,7 +49,7 @@ const settings: SettingsCardType[] = [
   // },
   {
     heading: "Personal Information",
-    description: "Manage your Medusa profile",
+    description: "Manage your Ecomhub profile",
     icon: HappyIcon,
     to: "/a/settings/personal-information",
   },
@@ -86,7 +86,7 @@ const settings: SettingsCardType[] = [
   // },
   {
     heading: "The Team",
-    description: "Manage users of your Medusa Store",
+    description: "Manage users of your Ecomhub Store",
     icon: UsersIcon,
     to: "/a/settings/team",
   },
